@@ -1,13 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- *
- * @author Mert Bilgic
- */
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class ThreadManager {
+        Object lock = new Object();
+    final int MainServerIndex = 0;
+    static List<Thread> threadResponse = Collections.synchronizedList(new ArrayList());
+    static int i;
+    static int nameSize = 3;
+    final int defaultThreadCount = 6;
+    static Thread mainThread, balance, t2, list, response, divede, close;
     
 }
