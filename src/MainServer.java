@@ -32,8 +32,10 @@ public class MainServer extends Server {
                 Thread.sleep(getRequestTime());
 
                 requestCount = random.nextInt(getMaxRequestCount());
+                //System.out.println(getRequestData().size()+"    "+getCapacity());
                 if (getRequestData().size() + requestCount <= getCapacity()) {
                     add(requestCount);
+                    //System.out.println(requestData.size());
                 } else {
                     requestCount = getCapacity() - getRequestData().size();
                     add(requestCount);
@@ -57,6 +59,7 @@ public class MainServer extends Server {
 
         }
     }
+
     //Listedimizdeki verileri yanıt veriyormuş gibi belli aralıklarla temizliyoruz.
     public void response() {
         int requestCount = 0;
@@ -91,4 +94,36 @@ public class MainServer extends Server {
             }
         }
     }
+
+    //Yük dağıtım işlemini MainServer üzerinden yapıyoruz.
+    public void serverBalance() {
+        int requestCount, serverIndex;
+        Server server;
+        while (true) {
+
+            //Hangi servere istek atıcaksak onu belirliyoruz.
+            serverIndex = random.nextInt(Main.server.size() - 1) + 1;
+            //Random request sayınını beliyoruz.
+            requestCount = random.nextInt(Main.server.get(serverIndex).getMaxRequestCount());
+            requestCount = requestCountControl(getRequestData().size(), requestCount);
+            //bu objeyi şimdilik girdi çıktı gibi işlemleri bana göstersin diye kullanıyourm
+            server = Main.server.get(serverIndex);
+
+            //Seçilen alt server kendine yollanan requestleri kabul ediyor
+            Main.server.get(serverIndex).request(Main.server.get(0).getRequestData(), serverIndex, requestCount);
+            for (int i = 0; i < requestCount && server.getRequestData().size() > requestCount; i++) {
+                requestData.remove(0);
+            }
+            //requestData.removeAll(temp);
+            if (Balence < 2) {
+                Balence++;
+            } else {
+                Balence = 0;
+                ThreadManager.balance.setPriority(Thread.NORM_PRIORITY);
+            }
+
+        }
+
+    }
+
 }

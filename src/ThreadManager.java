@@ -84,5 +84,27 @@ public class ThreadManager {
         threadResponse.add(t2);
 
     }
+    //Main serverdaki serverbalance fonksiyonu ile yük dağıtımı başlıyor
+
+    public void startServerBalance() {
+        System.out.println("//////////////// Start Server Balance Thread");
+        balance = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    Thread.sleep(Main.server.get(MainServerIndex).getRequestTime());
+
+                    Main.server.get(0).serverBalance();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+        });
+        balance.start();
+        balance.setPriority(Thread.MAX_PRIORITY - 2);
+
+    }
 
 }

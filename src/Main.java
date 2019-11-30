@@ -18,5 +18,15 @@ public class Main {
         server.add(new SubServer("SubServer-1", 5000, 300, 3000, 2, false, 150));
         server.add(new SubServer("SubServer-2", 5000, 300, 3000, 3, false, 150));
 
+        //MainServer'in request alma işlemini thread yardımıyla başladıtıyoruz
+        tm.startMainRequest();
+        //MainServer'in yük dağıtım işlemini thread yardımıyla başladıtıyoruz
+        tm.startServerBalance();
+        //Başlangıçta elimizde olan üç server için response işlemlerini gerçekleştiriyoruz thread yardımıyla başladıtıyoruz
+        tm.startMainResponse();
+        tm.startDefaultResponse();
+        //Şimdilik serverler'in durumunu kontrol etmek için oluştuduğumuz server listeleme fonskiyonu
+
     }
+
 }
