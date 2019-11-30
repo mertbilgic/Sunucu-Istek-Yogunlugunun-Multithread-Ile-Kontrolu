@@ -57,4 +57,38 @@ public class MainServer extends Server {
 
         }
     }
+    //Listedimizdeki verileri yanıt veriyormuş gibi belli aralıklarla temizliyoruz.
+    public void response() {
+        int requestCount = 0;
+        while (true) {
+            try {
+                synchronized (lock) {
+                    Thread.sleep(getResponseTime());
+
+                    requestCount = random.nextInt(getMaxRequestCount());
+
+                    if (requestCount > requestData.size()) {
+
+                        Thread.sleep(100);
+                        requestCount = (requestData.size());
+
+                    }
+                    synchronized (lock) {
+
+                        for (int i = 0; i < (requestCount) && requestCount < responseData.size(); i++) {
+                            requestData.remove(0);
+                        }
+                    }
+                    if (Reponse < 2) {
+                        Reponse++;
+                    } else {
+                        Reponse = 0;
+                        ThreadManager.response.setPriority(Thread.NORM_PRIORITY);
+                    }
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(SubServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 }
