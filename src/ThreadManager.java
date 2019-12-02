@@ -194,8 +194,31 @@ public class ThreadManager {
 
         }
     }
+
+    //Serverların bölünme sırasındaki sınırlarını berliyoruz.
     public void divideServer(Server server) {
-        
+        System.out.println("------------------------------->DivideServer");
+        int startIndex = server.getRequestData().size() / 2;
+        int finishIndex = server.getRequestData().size();
+        ArrayList<RequestData> temp = divideRequest(server.getRequestData(), startIndex, finishIndex);
+
+        server.requestData.removeAll(temp);
+        createNewServer(temp);
+    }
+
+    //Belirlediğimiz sınırlara göre yeni değişkenimize verileri ekliyoruz
+    public ArrayList<RequestData> divideRequest(ArrayList<RequestData> requestData, int startIndex, int finisIndex) {
+        System.out.println("------------------------------->divideRequest");
+        ArrayList<RequestData> temp;
+
+        temp = new ArrayList<RequestData>(requestData.subList(startIndex, finisIndex));
+
+        return temp;
+
+    }
+
+    public void createNewServer(ArrayList<RequestData> requestData) {
+
     }
 
     public void closeServer(ArrayList<Server> subServer) {
