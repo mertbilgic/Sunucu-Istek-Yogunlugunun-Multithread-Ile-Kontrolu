@@ -153,8 +153,49 @@ public class ThreadManager {
 
     }
 
-    public void capacityControl(ArrayList<Server> subServer) {
+    //Bölme işlemi yapılırken problem çıkmasını engellemek için request ve response işlerini sleep metodu ile bekletiyoruz.
+    public void waitResponseThread(int serverIndex) {
 
+        Main.server.get(serverIndex).setSleep(true);
+
+    }
+
+    //Beklettiğimiz request ve response işlemlerini tekrara başlatıyoruz
+    public void startResponseThread(int serverIndex) {
+
+        Main.server.get(serverIndex).setSleep(false);
+
+    }
+
+    //Sunucuların kapasitesini kontrol ederek bölünmesi gerektiğinde bölüyoruz.
+    public void capacityControl(ArrayList<Server> subServer) {
+        Server server;
+        while (true) {
+            try {
+                Thread.sleep(1000);
+                for (int k = 1; k < subServer.size(); k++) {
+                    server = subServer.get(k);
+                    double percent = (server.getCapacity() * 0.7);
+
+                    //System.out.println("currentPer:"+currentPer);
+                    if (server.getRequestData().size() >= percent) {
+                        System.out.println("-------------BÖLÜNME İŞLEMİNDEN ÖNCE-------------");
+                        waitResponseThread(k);
+                        divede.setPriority(Thread.MAX_PRIORITY);
+                        divideServer(server);
+                        startResponseThread(k);
+                        System.out.println("-------------BÖLÜNME İŞLEMİNDEN SONRA-------------");
+                    }
+
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ThreadManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+    }
+    public void divideServer(Server server) {
+        
     }
 
     public void closeServer(ArrayList<Server> subServer) {
