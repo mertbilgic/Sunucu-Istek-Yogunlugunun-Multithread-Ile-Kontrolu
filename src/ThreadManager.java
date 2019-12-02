@@ -107,4 +107,62 @@ public class ThreadManager {
 
     }
 
+    //Serverların durumunu basmak için printlist() fonskiyonunu aktifleştiriyoruz.
+    public void startListThread() {
+
+        list = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                printList();
+
+            }
+        });
+        list.start();
+        System.out.println("//////////////// Start List Thread");
+    }
+
+    public void capatityControlThread() {
+
+        divede = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                capacityControl(Main.server);
+
+            }
+        });
+
+        divede.start();
+        System.out.println("//////////////// Start capatityControlThread Thread");
+    }
+
+    //Request sayısı 0 a düşen fonksiyonlaru burda kontrol ediyoruz.
+    public void closeControlThread() {
+
+        close = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                closeServer(Main.server);
+
+            }
+        });
+        System.out.println("//////////////// Start closeControlThread Thread");
+        close.start();
+
+    }
+
+    public void capacityControl(ArrayList<Server> subServer) {
+
+    }
+
+    public void closeServer(ArrayList<Server> subServer) {
+
+    }
+
+    public void printList() {
+
+    }
+
 }
