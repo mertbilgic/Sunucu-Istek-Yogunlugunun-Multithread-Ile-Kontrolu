@@ -6,7 +6,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Server extends ThreadManager {
+public class Server {
 
     private String serverName;
     private int capacity;
@@ -15,6 +15,7 @@ public class Server extends ThreadManager {
     private int maxRequestCount;
     private int serverIP;
     private boolean sleep;
+    private int totalRequest;
     final int MainServerIndex = 0;
     final int startIndex = 0;
 
@@ -25,7 +26,7 @@ public class Server extends ThreadManager {
 
     Random random = new Random();
 
-    public Object lock = new Object();
+    Object lock = new Object();
 
     public Object lock2 = new Object();
     //Random request oluştururken gerçekcilik katsın diye oluşturduğum fake veriler
@@ -34,7 +35,7 @@ public class Server extends ThreadManager {
     final String response = "localhost:8888";
     final String clientIP = "192.168.1.";
 
-    public Server(String serverName, int capacity, int requestTime, int responseTime, int serverIP, boolean sleep, int maxRequestCount) {
+    public Server(String serverName, int capacity, int requestTime, int responseTime, int serverIP, boolean sleep, int maxRequestCount, int totalRequest) {
         this.serverName = serverName;
         this.capacity = capacity;
         this.requestTime = requestTime;
@@ -42,6 +43,15 @@ public class Server extends ThreadManager {
         this.serverIP = serverIP;
         this.sleep = sleep;
         this.maxRequestCount = maxRequestCount;
+        this.totalRequest = totalRequest;
+    }
+
+    public int getTotalRequest() {
+        return totalRequest;
+    }
+
+    public void setTotalRequest(int totalRequest) {
+        this.totalRequest = totalRequest;
     }
 
     public int getMaxRequestCount() {
@@ -133,11 +143,10 @@ public class Server extends ThreadManager {
         System.out.println("parent response");
     }
 
-    //Serverların aldığı random request ana sunucu tarafından karşılanabilecek
-    //durumuda mı diye kontrolleri yapıp uygun değeri gönderiyoruz.
     public int requestCountControl(int size, int requestCount) {
         int result = 0;
-
+        //System.out.println("size:"+size+" request"+requestCount);
+        // System.out.println("////////////////////////////////////"+size+"*********"+getServerName());
         if (size == getCapacity()) {
             return result;
         } else if (size + requestCount > getCapacity()) {

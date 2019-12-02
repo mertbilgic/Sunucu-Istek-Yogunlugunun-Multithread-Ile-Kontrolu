@@ -12,11 +12,10 @@ public class Main {
 
         //ThreadManeger sınıfındaki fonksiyonları kullanıp server yönetim işini
         //yapmak için oluşturduğumu obje
+        server.add(new MainServer("MainServer", 10000, 200, 2500, 1, false, 1000, 700, 0));
+        server.add(new SubServer("SubServer-1", 5000, 300, 3000, 2, false, 150, 0));
+        server.add(new SubServer("SubServer-2", 5000, 300, 3000, 3, false, 150, 0));
         ThreadManager tm = new ThreadManager();
-
-        server.add(new MainServer("MainServer", 10000, 200, 2500, 1, false, 1000, 700));
-        server.add(new SubServer("SubServer-1", 5000, 300, 3000, 2, false, 150));
-        server.add(new SubServer("SubServer-2", 5000, 300, 3000, 3, false, 150));
 
         //MainServer'in request alma işlemini thread yardımıyla başladıtıyoruz
         tm.startMainRequest();

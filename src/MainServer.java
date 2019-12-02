@@ -9,8 +9,8 @@ public class MainServer extends Server {
     static int Balence = 0, Reponse = 0;
 
     public MainServer(String serverName, int capacity, int requestTime, int responseTime, int serverIP,
-            boolean sleep, int controlTime, int maxRequestCount) {
-        super(serverName, capacity, requestTime, responseTime, serverIP, sleep, maxRequestCount);
+            boolean sleep, int controlTime, int maxRequestCount, int totalRequest) {
+        super(serverName, capacity, requestTime, responseTime, serverIP, sleep, maxRequestCount, totalRequest);
         this.controlTime = controlTime;
     }
 
@@ -41,6 +41,9 @@ public class MainServer extends Server {
                     add(requestCount);
 
                 }
+                //System.out.println(getServerName() + "  " + requestData.size());
+                //MainServer'ın request sayısı güncelleiyor
+                setTotalRequest(requestData.size());
             } catch (InterruptedException ex) {
                 Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -49,13 +52,13 @@ public class MainServer extends Server {
     }
 
     public void add(int requestCount) {
-        int value;
         String ip;
-        for (int i = 0; i < requestCount; i++) {
-            value = random.nextInt(12);
-            ip = String.valueOf(value);
 
-            requestData.add(new RequestData(clientIP + ip, requestName[value]));
+        for (int i = 0; i < requestCount; i++) {
+
+            ip = "11";
+
+            requestData.add(new RequestData(ip, ip));
 
         }
     }
@@ -63,7 +66,23 @@ public class MainServer extends Server {
     //Listedimizdeki verileri yanıt veriyormuş gibi belli aralıklarla temizliyoruz.
     public void response() {
         int requestCount = 0;
+        long start, end;
         while (true) {
+            //start = System.nanoTime();
+
+            while (getTotalRequest() == 0) {
+                System.out.println("Request Bekliyor");
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            /*end = (getResponseTime() - (System.nanoTime() - start));
+            if ((end < 0)) {
+                end = 0;
+            }
+            System.out.println("--------------------->end:  " + end);*/
             try {
                 synchronized (lock) {
                     Thread.sleep(getResponseTime());
@@ -76,18 +95,20 @@ public class MainServer extends Server {
                         requestCount = (requestData.size());
 
                     }
-                    synchronized (lock) {
 
-                        for (int i = 0; i < (requestCount) && requestCount < responseData.size(); i++) {
-                            requestData.remove(0);
-                        }
+                    for (int i = 0; i < (requestCount) && requestCount < responseData.size(); i++) {
+                        requestData.remove(0);
                     }
+
                     if (Reponse < 2) {
                         Reponse++;
                     } else {
                         Reponse = 0;
                         ThreadManager.response.setPriority(Thread.NORM_PRIORITY);
                     }
+                    //System.out.println("RESpoo" + getServerName() + "  " + requestData.size());
+                    //MainServer'ın request sayısı güncelleiyor
+                    setTotalRequest(requestData.size());
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(SubServer.class.getName()).log(Level.SEVERE, null, ex);
@@ -100,9 +121,16 @@ public class MainServer extends Server {
         int requestCount, serverIndex;
         Server server;
         while (true) {
-
+            while (getTotalRequest() == 0) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
             //Hangi servere istek atıcaksak onu belirliyoruz.
             serverIndex = random.nextInt(Main.server.size() - 1) + 1;
+            //System.out.println("ServerIndex" + serverIndex);
             //Random request sayınını beliyoruz.
             requestCount = random.nextInt(Main.server.get(serverIndex).getMaxRequestCount());
             requestCount = requestCountControl(getRequestData().size(), requestCount);
@@ -110,10 +138,11 @@ public class MainServer extends Server {
             server = Main.server.get(serverIndex);
 
             //Seçilen alt server kendine yollanan requestleri kabul ediyor
-            Main.server.get(serverIndex).request(Main.server.get(0).getRequestData(), serverIndex, requestCount);
-            for (int i = 0; i < requestCount && server.getRequestData().size() > requestCount; i++) {
+            Main.server.get(serverIndex).request(Main.server.get(0).requestData, serverIndex, requestCount);
+
+            /* for (int i = 0; i < requestCount && server.getRequestData().size() > requestCount; i++) {
                 requestData.remove(0);
-            }
+            }*/
             //requestData.removeAll(temp);
             if (Balence < 2) {
                 Balence++;
