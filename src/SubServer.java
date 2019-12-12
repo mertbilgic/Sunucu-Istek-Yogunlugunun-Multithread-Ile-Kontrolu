@@ -36,20 +36,15 @@ public class SubServer extends Server {
                         }
 
                     } catch (Exception ex) {
-                        System.out.println(request.get(0));
-                        System.out.println(request.get(0).getClientIP());
-                        System.out.println(request.get(0).getRequest());
-                        System.out.println("ex\n\n");
-                        System.out.println("---->"+r1);
-                        System.out.println("---->"+r2);
 
+                        //System.out.println("ex\n\n");
                     }
 
                 }
                 //SubServer'ın request sayısı güncelleiyor
                 setTotalRequest(requestData.size());
                 //System.out.println("Respoo" + getServerName() + "  " + requestData.size());
-            } catch (InterruptedException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(SubServer.class.getName()).log(Level.SEVERE, null, ex);
             }
             return temp;
@@ -76,14 +71,14 @@ public class SubServer extends Server {
                     /*ArrayList<RequestData> temp;
                     temp = new ArrayList<RequestData>(requestData.subList(startIndex, requestCount));
                     requestData.removeAll(temp);*/
-                    for (int j = 0; j < requestCount && requestData.size()!=0; j++) {
+                    for (int j = 0; j < requestCount && requestData.size() != 0; j++) {
                         try {
                             if (requestData.get(0) != null) {
                                 r1 = requestData.get(0).getClientIP();
                                 r2 = requestData.get(0).getRequest();
                                 requestData.remove(0);
                                 server.responseData.add(new RequestData(r1, r2));
-                            } 
+                            }
                         } catch (Exception ex) {
                             System.out.println("Response Ex:" + ex);
                         }
@@ -95,7 +90,7 @@ public class SubServer extends Server {
                     //System.out.println(getServerName() + "  " + requestData.size());
                     setTotalRequest(requestData.size());
                 }
-            } catch (InterruptedException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(SubServer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

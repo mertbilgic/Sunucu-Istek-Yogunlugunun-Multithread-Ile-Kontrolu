@@ -1,5 +1,5 @@
-//Bu sınıfı listelerimize verilerek eklerken gerekli objeleri oluşturmak için kullanıyoruz.
 
+//Bu sınıfı listelerimize verilerek eklerken gerekli objeleri oluşturmak için kullanıyoruz.
 public class RequestData {
 
     private String clientIP;

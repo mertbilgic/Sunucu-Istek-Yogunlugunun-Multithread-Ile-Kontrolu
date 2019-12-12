@@ -44,7 +44,7 @@ public class MainServer extends Server {
                 //System.out.println(getServerName() + "  " + requestData.size());
                 //MainServer'ın request sayısı güncelleiyor
                 setTotalRequest(requestData.size());
-            } catch (InterruptedException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -53,14 +53,19 @@ public class MainServer extends Server {
 
     public void add(int requestCount) {
         String ip;
+        try {
+            for (int i = 0; i < requestCount; i++) {
 
-        for (int i = 0; i < requestCount; i++) {
+                ip = "11";
 
-            ip = "11";
+                requestData.add(new RequestData(ip, ip));
 
-            requestData.add(new RequestData(ip, ip));
+            }
 
+        } catch (Exception ex) {
+            //System.out.println(ex);
         }
+
     }
 
     //Listedimizdeki verileri yanıt veriyormuş gibi belli aralıklarla temizliyoruz.
@@ -110,7 +115,7 @@ public class MainServer extends Server {
                     //MainServer'ın request sayısı güncelleiyor
                     setTotalRequest(requestData.size());
                 }
-            } catch (InterruptedException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(SubServer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -128,27 +133,32 @@ public class MainServer extends Server {
                     Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            //Hangi servere istek atıcaksak onu belirliyoruz.
-            serverIndex = random.nextInt(Main.server.size() - 1) + 1;
-            //System.out.println("ServerIndex" + serverIndex);
-            //Random request sayınını beliyoruz.
-            requestCount = random.nextInt(Main.server.get(serverIndex).getMaxRequestCount());
-            requestCount = requestCountControl(getRequestData().size(), requestCount);
-            //bu objeyi şimdilik girdi çıktı gibi işlemleri bana göstersin diye kullanıyourm
-            server = Main.server.get(serverIndex);
+            try {
+                //Hangi servere istek atıcaksak onu belirliyoruz.
+                serverIndex = random.nextInt(Main.server.size() - 1) + 1;
+                //System.out.println("ServerIndex" + serverIndex);
+                //Random request sayınını beliyoruz.
+                requestCount = random.nextInt(Main.server.get(serverIndex).getMaxRequestCount());
+                requestCount = requestCountControl(getRequestData().size(), requestCount);
+                //bu objeyi şimdilik girdi çıktı gibi işlemleri bana göstersin diye kullanıyourm
+                server = Main.server.get(serverIndex);
 
-            //Seçilen alt server kendine yollanan requestleri kabul ediyor
-            Main.server.get(serverIndex).request(Main.server.get(0).requestData, serverIndex, requestCount);
+                //Seçilen alt server kendine yollanan requestleri kabul ediyor
+                Main.server.get(serverIndex).request(Main.server.get(0).requestData, serverIndex, requestCount);
 
-            /* for (int i = 0; i < requestCount && server.getRequestData().size() > requestCount; i++) {
+                /* for (int i = 0; i < requestCount && server.getRequestData().size() > requestCount; i++) {
                 requestData.remove(0);
             }*/
-            //requestData.removeAll(temp);
-            if (Balence < 2) {
-                Balence++;
-            } else {
-                Balence = 0;
-                ThreadManager.balance.setPriority(Thread.NORM_PRIORITY);
+                //requestData.removeAll(temp);
+                if (Balence < 2) {
+                    Balence++;
+                } else {
+                    Balence = 0;
+                    ThreadManager.balance.setPriority(Thread.NORM_PRIORITY);
+                }
+
+            } catch (Exception ex) {
+
             }
 
         }

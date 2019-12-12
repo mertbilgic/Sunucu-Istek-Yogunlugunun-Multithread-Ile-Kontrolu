@@ -10,13 +10,13 @@ public class Main {
 
         System.out.println("//////////////// Main Thread Başladı");
 
-        //ThreadManeger sınıfındaki fonksiyonları kullanıp server yönetim işini
-        //yapmak için oluşturduğumu obje
         server.add(new MainServer("MainServer", 10000, 200, 2500, 1, false, 1000, 700, 0));
         server.add(new SubServer("SubServer-1", 5000, 300, 3000, 2, false, 150, 0));
         server.add(new SubServer("SubServer-2", 5000, 300, 3000, 3, false, 150, 0));
-        ThreadManager tm = new ThreadManager();
 
+        //ThreadManeger sınıfındaki fonksiyonları kullanıp server yönetim işini
+        //yapmak için oluşturduğumu obje
+        ThreadManager tm = new ThreadManager();
         //MainServer'in request alma işlemini thread yardımıyla başladıtıyoruz
         tm.startMainRequest();
         //MainServer'in yük dağıtım işlemini thread yardımıyla başladıtıyoruz
@@ -25,6 +25,10 @@ public class Main {
         tm.startMainResponse();
         tm.startDefaultResponse();
         //Şimdilik serverler'in durumunu kontrol etmek için oluştuduğumuz server listeleme fonskiyonu
+        tm.startListThread();
+        //tm.stopResponseThread();
+        tm.capatityControlThread();
+        tm.closeControlThread();
 
     }
 
